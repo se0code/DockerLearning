@@ -1,5 +1,10 @@
 version: "3.9"
+networks:
+  app-tier:
+    driver: bridge
 services:
+  ansible:
+    image: ansible
   jupyter:
     build:
       context: .
@@ -21,5 +26,15 @@ services:
       - pgdata:/var/lib/postgresql/data
     ports:
       - 8080:8080
+  rabbitmq:
+    image: 'bitnami/rabbitmq:latest'
+    environment:
+      - RABBITMQ_USERNAME=admin
+      - RABBITMQ_PASSWORD=123test
+    ports:
+      - '15672:15672'
+    networks:
+      - app-tier
+    
 volumes:
   pgdata:
