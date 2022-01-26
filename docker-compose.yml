@@ -4,7 +4,16 @@ networks:
     driver: bridge
 services:
   ansible:
-    image: ansible
+    image: williamyeh/ansible:centos7
+    volumes:
+      - "./ansible-learning/ssh/config:/root/.ssh/config"
+      - "./ansible-learning/hosts/hosts:/etc/ansible/hosts"
+      - "./ansible-learning/playbooks:/root/playbooks"
+    links:
+      - server
+
+  server:
+    build: .
   jupyter:
     build:
       context: .
@@ -18,6 +27,8 @@ services:
     restart: always
     environment:
       POSTGRES_PASSWORD: example
+    ports: 
+      - 5432:5432
 
   adminer:
     image: adminer
